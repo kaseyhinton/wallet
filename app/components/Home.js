@@ -1,61 +1,55 @@
 // @flow
 import React, {Component} from 'react';
-import {Link} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 import {DefaultButton} from 'office-ui-fabric-react/lib/Button';
 import {CommandButton} from 'office-ui-fabric-react/lib/Button';
 import {CommandBar} from 'office-ui-fabric-react/lib/CommandBar';
 import {List} from 'office-ui-fabric-react/lib/List';
-import {Image, ImageFit} from 'office-ui-fabric-react/lib/Image';
 
 import styles from './Home.css';
 
-const items = [
-  {
-    key: 'accounts',
-    name: 'Accounts',
-    icon: 'BankSolid',
-    onClick: () => console.log('OVERVIEW clicked')
-  }, {
-    key: 'transactions',
-    name: 'Transactions',
-    icon: 'Money',
-    onClick: () => console.log('TRANSACTIONS clicked')
-  }
-];
-
-const farItems = [
-  {
-    key: 'options',
-    name: 'Options',
-    items: [
-      {
-        key: 'change passphrase',
-        name: 'Change Passphrase',
-        icon: 'Permissions'
-      }, {
-        key: 'backup wallet',
-        name: 'Backup Wallet',
-        icon: 'Save'
-      }, {
-        key: 'settings',
-        name: 'Settings',
-        icon: 'Settings'
-      }, {
-        key: 'exit',
-        name: 'Exit',
-        icon: 'Cancel'
-      }
-    ]
-  }
-];
-
-export default class Home extends Component {
-  componentDidMount() {
-    console.log(this.props);
-  }
-
+class Home extends Component {
   render() {
     let {accounts} = this.props;
+    const items = [
+      {
+        key: 'accounts',
+        name: 'Accounts',
+        icon: 'BankSolid',
+        onClick: () => this.props.history.push('/')
+      }, {
+        key: 'transactions',
+        name: 'Transactions',
+        icon: 'Money',
+        onClick: () => this.props.history.push('/transactions')
+      }
+    ];
+    
+     const farItems = [
+      {
+        key: 'options',
+        name: 'Options',
+        items: [
+          {
+            key: 'change passphrase',
+            name: 'Change Passphrase',
+            icon: 'Permissions'
+          }, {
+            key: 'backup wallet',
+            name: 'Backup Wallet',
+            icon: 'Save'
+          }, {
+            key: 'settings',
+            name: 'Settings',
+            icon: 'Settings'
+          }, {
+            key: 'exit',
+            name: 'Exit',
+            icon: 'Cancel'
+          }
+        ]
+      }
+    ];
 
     return (
       <div>
@@ -92,3 +86,4 @@ export default class Home extends Component {
     );
   }
 }
+export default withRouter(Home);
