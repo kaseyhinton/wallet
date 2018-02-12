@@ -8,7 +8,16 @@ import './app.global.css';
 import { initializeIcons } from '@uifabric/icons';
 
 initializeIcons();
-const store = configureStore();
+const initialState = {
+  counter: 0,
+  router: null,
+  accounts: [
+    { name: 'First Bank', type: 'Checking', balance: 3500},
+    { name: 'First Bank', type: 'Savings', balance: 5250},
+    { name: 'Official Retirement', type: 'Retirement', balance: 135000}
+    ]
+}
+const store = configureStore(initialState);
 
 render(
   <Fabric>
