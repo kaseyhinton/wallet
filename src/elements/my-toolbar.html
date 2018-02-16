@@ -5,6 +5,8 @@
 <link rel="import" href="../../bower_components/app-layout/app-drawer/app-drawer.html">
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-progress/paper-progress.html">
+
 <!-- Styles -->
 <link rel="import" href="../styles/shared-styles.html">
 
@@ -19,10 +21,17 @@
         background-color: var(--paper-blue-500);
         color: white;
       }
+
+      paper-progress {
+        width: 100%;
+        --paper-progress-active-color: var(--paper-light-blue-500);
+        --paper-progress-container-color: var(--paper-light-blue-100);
+      }
     </style>
     <app-toolbar>
       <paper-icon-button icon="menu" on-click="_toggle"></paper-icon-button>
       <div main-title>Wallet</div>
+      <paper-progress indeterminate bottom-item></paper-progress>
     </app-toolbar>
     <app-drawer id="drawer" align="start" swipe-open></app-drawer>
   </template>
@@ -30,7 +39,7 @@
   <script>
     class MyToolbar extends Polymer.Element {
       static get is() { return 'my-toolbar'; }
-      
+
       _toggle() {
         this.$.drawer.toggle();
       }
