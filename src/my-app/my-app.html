@@ -1,0 +1,41 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<!-- Components -->
+<link rel="import" href="../elements/my-toolbar.html">
+
+<!-- Styles -->
+<link rel="import" href="../styles/shared-styles.html">
+
+<dom-module id="my-app">
+  <template>
+    <style include="shared-styles"></style>
+    <style>
+      :host {
+        display: block;
+        @apply --paper-font-body1;
+      }
+    </style>
+    <my-toolbar></my-toolbar>
+    <h2>[[prop1]]</h2>
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class MyApp extends Polymer.Element {
+      static get is() { return 'my-app'; }
+      static get properties() {
+        return {
+          prop1: {
+            type: String,
+            value: 'Polymer Electron Starter Kit'
+          }
+        };
+      }
+    }
+
+    window.customElements.define(MyApp.is, MyApp);
+  </script>
+</dom-module>

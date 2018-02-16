@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Polymer Electron Starter Kit</title>
+  </head>
+  <body>
+    <my-app></my-app>
+    <link rel="stylesheet" href="./src/styles/index.css">
+    <script src="./bower_components/webcomponentsjs/webcomponents-loader.js"></script>
+    <link rel="import" href="./src/my-app/my-app.html">
+    <script>
+      // You can also require other files to run in this process
+      require('./renderer.js')
+    </script>
+  </body>
+</html>

@@ -1,0 +1,41 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<!-- Components -->
+<link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+
+<!-- Styles -->
+<link rel="import" href="../styles/shared-styles.html">
+
+<dom-module id="my-toolbar">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      app-toolbar {
+          background-color: var(--paper-blue-500);
+          color: white;
+      }
+    </style>
+   <app-toolbar>
+       <div main-title>Wallet</div>
+   </app-toolbar>
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class MyToolbar extends Polymer.Element {
+      static get is() { return 'my-toolbar'; }
+      static get properties() {
+        return {
+        
+        };
+      }
+    }
+
+    window.customElements.define(MyToolbar.is, MyToolbar);
+  </script>
+</dom-module>
