@@ -4,6 +4,15 @@
 <link rel="import" href="../../bower_components/app-route/app-route.html">
 <link rel="import" href="../../bower_components/app-route/app-location.html">
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../../bower_components/paper-item/paper-icon-item.html">
 <link rel="import" href="../elements/my-toolbar.html">
 
 <!-- Pages -->
@@ -23,16 +32,66 @@
         --primary-color: var(--app-primary-color);
         --accent-color: var(--paper-light-blue-600);
       }
+
+
+      app-header {
+        background-color: #4285f4;
+        color: #fff;
+      }
+
+      app-header paper-icon-button {
+        --paper-icon-button-ink-color: #fff;
+      }
+
+      app-drawer-layout {
+        --app-drawer-layout-content-transition: margin 0.2s;
+      }
+
+      app-drawer {
+        --app-drawer-content-container: {
+          background-color: #fff;
+        }
+      }
+
+      .drawer-content {
+        margin-top: 80px;
+        height: calc(100% - 80px);
+        overflow: auto;
+      }
+
     </style>
     <app-location use-hash-as-path route="{{route}}"></app-location>
 
     <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" active="{{isActive}}">
     </app-route>
 
-    <my-toolbar main-title="[[mainTitle]]"></my-toolbar>
-    <iron-pages selected="[[page]]" attr-for-selected="name">
-      <my-accounts is-loading="{{isLoading}}" name="my-accounts"></my-accounts>
-    </iron-pages>
+    <app-header-layout>
+
+      <app-header fixed effects="waterfall" slot="header">
+        <app-toolbar>
+          <paper-icon-button on-click="_toggle" icon="menu"></paper-icon-button>
+          <div main-title>[[mainTitle]]</div>
+        </app-toolbar>
+      </app-header>
+
+      <app-drawer-layout id="drawerLayout">
+
+        <app-drawer slot="drawer">
+          <div class="drawer-content">
+            <paper-icon-item>
+              <iron-icon icon="account-balance-wallet" slot="item-icon"></iron-icon>
+              <span>Accounts</span>
+            </paper-icon-item>
+          </div>
+        </app-drawer>
+
+        <iron-pages selected="[[page]]" attr-for-selected="name">
+          <my-accounts is-loading="{{isLoading}}" name="my-accounts"></my-accounts>
+        </iron-pages>
+
+      </app-drawer-layout>
+
+    </app-header-layout>
   </template>
 
   <script>
@@ -58,6 +117,16 @@
         return ['_routePageChanged(routeData.page)', '_isActiveChanged(isActive)'];
       }
 
+      _toggle() {
+        const drawerLayout = this.$.drawerLayout;
+        
+        if (drawerLayout.forceNarrow || !drawerLayout.narrow) {
+          drawerLayout.forceNarrow = !drawerLayout.forceNarrow;
+        } else {
+          drawerLayout.drawer.toggle();
+        }
+      }
+
       _isActiveChanged(isActive) {
         console.log('isActive', isActive);
         if (!isActive) {
@@ -75,8 +144,6 @@
           return;
 
         this.mainTitle = this.page.split('my-')[1].toUpperCase();
-
-
       }
     }
 

@@ -1,3 +1,6 @@
 html, body {
     margin: 0;
+    font-family: 'Roboto', 'Noto', sans-serif;
+    background-color: #eee;
+    user-select: none;
 }
