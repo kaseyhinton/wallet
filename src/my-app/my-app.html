@@ -1,7 +1,13 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 
 <!-- Components -->
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/app-route/app-location.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
 <link rel="import" href="../elements/my-toolbar.html">
+
+<!-- Pages -->
+<link rel="import" href="../pages/my-accounts.html">
 
 <!-- Styles -->
 <link rel="import" href="../styles/shared-styles.html">
@@ -13,10 +19,20 @@
       :host {
         display: block;
         @apply --paper-font-body1;
+        --app-primary-color: var(--paper-teal-500);
+        --primary-color: var(--app-primary-color);
+        --accent-color: var(--paper-light-blue-600);
       }
     </style>
-    <my-toolbar></my-toolbar>
-    <h2>[[prop1]]</h2>
+    <app-location use-hash-as-path route="{{route}}"></app-location>
+
+    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" active="{{isActive}}">
+    </app-route>
+
+    <my-toolbar main-title="[[mainTitle]]"></my-toolbar>
+    <iron-pages selected="[[page]]" attr-for-selected="name">
+      <my-accounts is-loading="{{isLoading}}" name="my-accounts"></my-accounts>
+    </iron-pages>
   </template>
 
   <script>
@@ -28,11 +44,39 @@
       static get is() { return 'my-app'; }
       static get properties() {
         return {
-          prop1: {
+          page: {
             type: String,
-            value: 'Polymer Electron Starter Kit'
+            reflectToAttribute: true
+          },
+          mainTitle: {
+            type: String
           }
         };
+      }
+
+      static get observers() {
+        return ['_routePageChanged(routeData.page)', '_isActiveChanged(isActive)'];
+      }
+
+      _isActiveChanged(isActive) {
+        console.log('isActive', isActive);
+        if (!isActive) {
+          return;
+        }
+      }
+
+      _routePageChanged(page) {
+        const routes = ['my-accounts'];
+        this.page = page || 'my-accounts';
+        if (!this.page)
+          return;
+
+        if (routes.indexOf(this.page) === -1)
+          return;
+
+        this.mainTitle = this.page.split('my-')[1].toUpperCase();
+
+
       }
     }
 

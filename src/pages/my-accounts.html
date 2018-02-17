@@ -1,0 +1,47 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<!-- Components -->
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/app-route/app-location.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+
+<!-- Styles -->
+<link rel="import" href="../styles/shared-styles.html">
+
+<dom-module id="my-accounts">
+    <template>
+        <style include="shared-styles"></style>
+        <style>
+            :host {
+                display: block;
+                @apply --paper-font-body1;
+            }
+
+            paper-fab {
+                position: fixed;
+                bottom: 16px;
+                right: 16px;
+            }
+        </style>
+        <paper-fab icon="add"></paper-fab>
+    </template>
+
+    <script>
+        /**
+         * @customElement
+         * @polymer
+         */
+        class MyAccounts extends Polymer.Element {
+            static get is() { return 'my-accounts'; }
+            static get properties() {
+                return {
+                };
+            }
+
+
+        }
+
+        window.customElements.define(MyAccounts.is, MyAccounts);
+    </script>
+</dom-module>
