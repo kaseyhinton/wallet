@@ -1,0 +1,34 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<!-- Styles -->
+<link rel="import" href="../styles/shared-styles.html">
+
+<dom-module id="my-transactions">
+    <template>
+        <style include="shared-styles"></style>
+        <style>
+            :host {
+                display: block;
+                @apply --paper-font-body1;
+            }
+        </style>
+        <template is="dom-repeat" items="[[transactions]]">
+            <div>[[item.description]] [[item.amount]]</div>
+        </template>
+    </template>
+
+    <script>
+        class MyTransactions extends Polymer.Element {
+            static get is() { return 'my-transactions'; }
+            static get properties() {
+                return {
+                    transactions: {
+                        type: Array
+                    }
+                };
+            }
+        }
+
+        window.customElements.define(MyTransactions.is, MyTransactions);
+    </script>
+</dom-module>

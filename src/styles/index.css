@@ -3,4 +3,5 @@ html, body {
     font-family: 'Roboto', 'Noto', sans-serif;
     background-color: #eee;
     user-select: none;
+    cursor: default;
 }

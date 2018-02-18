@@ -5,6 +5,8 @@
 <link rel="import" href="../../bower_components/app-route/app-location.html">
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 
 <!-- Styles -->
 <link rel="import" href="../styles/shared-styles.html">
@@ -18,28 +20,72 @@
                 @apply --paper-font-body1;
             }
 
+            accounts-container {
+                @apply --layout-horizontal;
+                @apply --layout-wrap;
+            }
+
+            paper-card {
+                min-width: 250px;
+                margin: 8px;
+                transition: .2s linear;
+                --paper-card-actions: {
+                    @apply --layout-vertical;
+                    padding: 0;
+                }
+            }
+
             paper-fab {
                 position: fixed;
                 bottom: 16px;
                 right: 16px;
             }
+
+            paper-icon-button {
+                @apply --layout-self-end;
+                margin: 0;
+                --paper-icon-button-ink-color: var(--app-primary-color);
+                color: var(--app-text-color);
+            }
+
+            paper-icon-button:hover {
+                transition: .2s linear;
+                color: var(--paper-blue-500);
+            }
+
+            @media(max-width: 736px) {
+                accounts-container {
+                    @apply --layout-vertical;
+                }
+
+                paper-card {
+                    @apply --layout-flex-auto;
+                }
+            }
         </style>
-        <paper-fab icon="add"></paper-fab>
+        <accounts-container>
+            <template is="dom-repeat" items="[[accounts]]">
+                <paper-card heading="[[item.name]]">
+                    <div class="card-content">[[item.balance]]</div>
+                    <div class="card-actions">
+                        <paper-icon-button icon="arrow-forward"></paper-icon-button>
+                    </div>
+                </paper-card>
+            </template>
+            <paper-fab icon="add"></paper-fab>
+        </accounts-container>
     </template>
 
     <script>
-        /**
-         * @customElement
-         * @polymer
-         */
         class MyAccounts extends Polymer.Element {
             static get is() { return 'my-accounts'; }
             static get properties() {
                 return {
+                    accounts: {
+                        type: Array
+                    }
                 };
             }
-
-
         }
 
         window.customElements.define(MyAccounts.is, MyAccounts);

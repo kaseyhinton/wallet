@@ -8,14 +8,58 @@
         class SqliteDB extends Polymer.Element {
             static get is() { return 'sqlite-db'; }
             static get properties() {
-                return {};
+                return {
+                    accounts: {
+                        type: Array,
+                        value: [],
+                        notify: true
+                    },
+                    transactions: {
+                        type: Array,
+                        value: [],
+                        notify: true
+                    }
+                };
             }
 
             connectedCallback() {
                 super.connectedCallback();
                 const sqlite3 = require('sqlite3').verbose();
                 var db = new sqlite3.Database(':memory:');
-                console.log(db, 'sqlite3 loaded');
+                db.serialize(() => {
+                    db.run("CREATE TABLE accounts (accountId integer PRIMARY KEY, name text NOT NULL, balance integer)");
+                    db.run("CREATE TABLE transactions (description text NOT NULL, amount integer, accountId integer NOT NULL, FOREIGN KEY (accountId) REFERENCES accounts(accountId))");
+
+                    // Mock Data
+                    const accounts = [
+                        { accountId: 1, name: "Zions Bank", balance: 1200 },
+                        { accountId: 2, name: "Mountain America", balance: 23000 },
+                        { accountId: 3, name: "Wells Fargo", balance: 253 },
+                    ];
+
+                    const transactions = [
+                        { description: "Mortgage", amount: 845, accountId: 1 },
+                        { description: "Car Payment", amount: 360, accountId: 1 },
+                        { description: "Charitable Contribution", amount: 125, accountId: 1 },
+                    ];
+
+                    accounts.map(account => {
+                        db.run("INSERT INTO accounts(`accountId`, `name`, `balance`) VALUES (?,?,?)", account.accountId, account.name, account.balance);
+                    });
+
+                     transactions.map(transaction => {
+                        db.run("INSERT INTO transactions(`description`, `amount`, `accountId`) VALUES (?,?,?)", transaction.description, transaction.amount, transaction.accountId);
+                    });
+
+                    db.each("SELECT * FROM accounts", (err, row) => {
+                        this.push('accounts', row);
+                    });
+
+                    db.each("SELECT * FROM transactions", (err, row) => {
+                        this.push('transactions', row);
+                    });
+                });
+
                 db.close();
             }
         }

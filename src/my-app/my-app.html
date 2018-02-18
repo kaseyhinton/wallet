@@ -13,10 +13,12 @@
 <link rel="import" href="../../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../../bower_components/paper-item/paper-icon-item.html">
+<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../api/sqlite-db.html">
 
 <!-- Pages -->
 <link rel="import" href="../pages/my-accounts.html">
+<link rel="import" href="../pages/my-transactions.html">
 
 <!-- Styles -->
 <link rel="import" href="../styles/shared-styles.html">
@@ -28,16 +30,24 @@
       :host {
         display: block;
         @apply --paper-font-body1;
-        --app-primary-color: var(--paper-teal-500);
+        --app-primary-color: var(--paper-blue-500);
         --primary-color: var(--app-primary-color);
         --accent-color: var(--paper-light-blue-600);
+        --app-text-color: var(--paper-grey-700);
+        color: var(--app-text-color);
+        --paper-item-icon: {
+          color: var(--app-text-color);
+        }
       }
 
+      a {
+        text-decoration: none;
+        color: var(--app-text-color);
+      }
 
       app-header {
-        background-color: #4285f4;
+        background-color: var(--app-primary-color);
         color: #fff;
-        @apply --shadow-elevation-2dp;
       }
 
       app-header paper-icon-button {
@@ -51,7 +61,6 @@
       app-drawer {
         --app-drawer-content-container: {
           background-color: #fff;
-          @apply --shadow-elevation-2dp;
         }
       }
 
@@ -60,14 +69,12 @@
         height: calc(100% - 80px);
         overflow: auto;
       }
-
     </style>
     <app-location use-hash-as-path route="{{route}}"></app-location>
 
-    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" active="{{isActive}}">
-    </app-route>
+    <app-route route="{{route}}" pattern="/:page" data="{{routeData}}"></app-route>
 
-    <sqlite-db></sqlite-db>
+    <sqlite-db transactions="{{transactions}}" accounts="{{accounts}}"></sqlite-db>
 
     <app-header-layout>
       <app-header fixed effects="waterfall" slot="header">
@@ -81,27 +88,32 @@
 
         <app-drawer slot="drawer">
           <div class="drawer-content">
-            <paper-icon-item>
-              <iron-icon icon="account-balance-wallet" slot="item-icon"></iron-icon>
-              <span>Accounts</span>
-            </paper-icon-item>
+            <iron-selector attr-for-selected="name" selected="[[mainTitle]]">
+              <a href="#/accounts" name="ACCOUNTS">
+                <paper-icon-item>
+                  <iron-icon icon="account-balance" slot="item-icon"></iron-icon>
+                  <span>Accounts</span>
+                </paper-icon-item>
+              </a>
+              <a href="#/transactions" name="TRANSACTIONS">
+                <paper-icon-item>
+                  <iron-icon icon="work" slot="item-icon"></iron-icon>
+                  <span>Transactions</span>
+                </paper-icon-item>
+              </a>
+            </iron-selector>
           </div>
         </app-drawer>
-
         <iron-pages selected="[[page]]" attr-for-selected="name">
-          <my-accounts is-loading="{{isLoading}}" name="my-accounts"></my-accounts>
+          <my-accounts accounts="[[accounts]]" is-loading="{{isLoading}}" name="accounts"></my-accounts>
+          <my-transactions transactions="[[transactions]]" is-loading="{{isLoading}}" name="transactions"></my-transactions>
         </iron-pages>
-
       </app-drawer-layout>
 
     </app-header-layout>
   </template>
 
   <script>
-    /**
-     * @customElement
-     * @polymer
-     */
     class MyApp extends Polymer.Element {
       static get is() { return 'my-app'; }
       static get properties() {
@@ -112,17 +124,28 @@
           },
           mainTitle: {
             type: String
+          },
+          accounts: {
+            type: Array
+          },
+          transactions: {
+            type: Array
           }
         };
       }
 
       static get observers() {
-        return ['_routePageChanged(routeData.page)', '_isActiveChanged(isActive)'];
+        return ['_routePageChanged(routeData.page)'];
+      }
+
+      ready() {
+        super.ready();
+        window.location.hash = window.location.hash || "#/accounts";
       }
 
       _toggle() {
         const drawerLayout = this.$.drawerLayout;
-        
+
         if (drawerLayout.forceNarrow || !drawerLayout.narrow) {
           drawerLayout.forceNarrow = !drawerLayout.forceNarrow;
         } else {
@@ -130,23 +153,12 @@
         }
       }
 
-      _isActiveChanged(isActive) {
-        console.log('isActive', isActive);
-        if (!isActive) {
-          return;
-        }
-      }
-
       _routePageChanged(page) {
-        const routes = ['my-accounts'];
-        this.page = page || 'my-accounts';
-        if (!this.page)
+        console.log(page);
+        this.page = page;
+        if(!this.page)
           return;
-
-        if (routes.indexOf(this.page) === -1)
-          return;
-
-        this.mainTitle = this.page.split('my-')[1].toUpperCase();
+        this.mainTitle = this.page.toUpperCase();
       }
     }
 
