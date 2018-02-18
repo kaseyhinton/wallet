@@ -1,0 +1,25 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="sqlite-db">
+    <template>
+    </template>
+
+    <script>
+        class SqliteDB extends Polymer.Element {
+            static get is() { return 'sqlite-db'; }
+            static get properties() {
+                return {};
+            }
+
+            connectedCallback() {
+                super.connectedCallback();
+                const sqlite3 = require('sqlite3').verbose();
+                var db = new sqlite3.Database(':memory:');
+                console.log(db, 'sqlite3 loaded');
+                db.close();
+            }
+        }
+
+        window.customElements.define(SqliteDB.is, SqliteDB);
+    </script>
+</dom-module>

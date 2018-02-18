@@ -13,7 +13,7 @@
 <link rel="import" href="../../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../../bower_components/paper-item/paper-icon-item.html">
-<link rel="import" href="../elements/my-toolbar.html">
+<link rel="import" href="../api/sqlite-db.html">
 
 <!-- Pages -->
 <link rel="import" href="../pages/my-accounts.html">
@@ -37,6 +37,7 @@
       app-header {
         background-color: #4285f4;
         color: #fff;
+        @apply --shadow-elevation-2dp;
       }
 
       app-header paper-icon-button {
@@ -50,6 +51,7 @@
       app-drawer {
         --app-drawer-content-container: {
           background-color: #fff;
+          @apply --shadow-elevation-2dp;
         }
       }
 
@@ -65,8 +67,9 @@
     <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" active="{{isActive}}">
     </app-route>
 
-    <app-header-layout>
+    <sqlite-db></sqlite-db>
 
+    <app-header-layout>
       <app-header fixed effects="waterfall" slot="header">
         <app-toolbar>
           <paper-icon-button on-click="_toggle" icon="menu"></paper-icon-button>
