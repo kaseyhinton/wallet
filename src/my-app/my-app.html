@@ -74,7 +74,7 @@
 
     <app-route route="{{route}}" pattern="/:page" data="{{routeData}}"></app-route>
 
-    <sqlite-db transactions="{{transactions}}" accounts="{{accounts}}"></sqlite-db>
+    <sqlite-db db="{{db}}" transactions="{{transactions}}" accounts="{{accounts}}"></sqlite-db>
 
     <app-header-layout>
       <app-header fixed effects="waterfall" slot="header">
@@ -130,6 +130,9 @@
           },
           transactions: {
             type: Array
+          },
+          db: {
+            type: Object
           }
         };
       }

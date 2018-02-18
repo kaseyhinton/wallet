@@ -18,6 +18,10 @@
                         type: Array,
                         value: [],
                         notify: true
+                    },
+                    db: {
+                        type: Object,
+                        notify: true
                     }
                 };
             }
@@ -25,10 +29,10 @@
             connectedCallback() {
                 super.connectedCallback();
                 const sqlite3 = require('sqlite3').verbose();
-                var db = new sqlite3.Database(':memory:');
-                db.serialize(() => {
-                    db.run("CREATE TABLE accounts (accountId integer PRIMARY KEY, name text NOT NULL, balance integer)");
-                    db.run("CREATE TABLE transactions (description text NOT NULL, amount integer, accountId integer NOT NULL, FOREIGN KEY (accountId) REFERENCES accounts(accountId))");
+                this.db = new sqlite3.Database(':memory:');
+                this.db.serialize(() => {
+                    this.db.run("CREATE TABLE accounts (accountId integer PRIMARY KEY, name text NOT NULL, balance integer)");
+                    this.db.run("CREATE TABLE transactions (description text NOT NULL, amount integer, accountId integer NOT NULL, FOREIGN KEY (accountId) REFERENCES accounts(accountId))");
 
                     // Mock Data
                     const accounts = [
@@ -44,23 +48,26 @@
                     ];
 
                     accounts.map(account => {
-                        db.run("INSERT INTO accounts(`accountId`, `name`, `balance`) VALUES (?,?,?)", account.accountId, account.name, account.balance);
+                        this.db.run("INSERT INTO accounts(`accountId`, `name`, `balance`) VALUES (?,?,?)", account.accountId, account.name, account.balance);
                     });
 
-                     transactions.map(transaction => {
-                        db.run("INSERT INTO transactions(`description`, `amount`, `accountId`) VALUES (?,?,?)", transaction.description, transaction.amount, transaction.accountId);
+                    transactions.map(transaction => {
+                        this.db.run("INSERT INTO transactions(`description`, `amount`, `accountId`) VALUES (?,?,?)", transaction.description, transaction.amount, transaction.accountId);
                     });
 
-                    db.each("SELECT * FROM accounts", (err, row) => {
+                    this.db.each("SELECT * FROM accounts", (err, row) => {
                         this.push('accounts', row);
                     });
 
-                    db.each("SELECT * FROM transactions", (err, row) => {
+                    this.db.each("SELECT * FROM transactions", (err, row) => {
                         this.push('transactions', row);
                     });
                 });
+            }
 
-                db.close();
+            disconnectedCallback() {
+                super.disconnectedCallback();
+                this.db.close();
             }
         }
 
