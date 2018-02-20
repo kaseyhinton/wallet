@@ -32,7 +32,7 @@
                 this.db = new sqlite3.Database(':memory:');
                 this.db.serialize(() => {
                     this.db.run("CREATE TABLE accounts (accountId integer PRIMARY KEY, name text NOT NULL, balance integer)");
-                    this.db.run("CREATE TABLE transactions (description text NOT NULL, amount integer, accountId integer NOT NULL, FOREIGN KEY (accountId) REFERENCES accounts(accountId))");
+                    this.db.run("CREATE TABLE transactions (id integer PRIMARY KEY, description text NOT NULL, amount integer, accountId integer NOT NULL, FOREIGN KEY (accountId) REFERENCES accounts(accountId))");
 
                     // Mock Data
                     const accounts = [
@@ -42,9 +42,9 @@
                     ];
 
                     const transactions = [
-                        { description: "Mortgage", amount: 845, accountId: 1 },
-                        { description: "Car Payment", amount: 360, accountId: 1 },
-                        { description: "Charitable Contribution", amount: 125, accountId: 1 },
+                        { id: 1, description: "Mortgage", amount: 845, accountId: 1 },
+                        { id: 2, description: "Car Payment", amount: 360, accountId: 1 },
+                        { id: 3, description: "Charitable Contribution", amount: 125, accountId: 1 },
                     ];
 
                     accounts.map(account => {
@@ -52,16 +52,35 @@
                     });
 
                     transactions.map(transaction => {
-                        this.db.run("INSERT INTO transactions(`description`, `amount`, `accountId`) VALUES (?,?,?)", transaction.description, transaction.amount, transaction.accountId);
+                        this.db.run("INSERT INTO transactions(`id`, `description`, `amount`, `accountId`) VALUES (?, ?,?,?)", transaction.id, transaction.description, transaction.amount, transaction.accountId);
                     });
 
                     this.db.each("SELECT * FROM accounts", (err, row) => {
                         this.push('accounts', row);
                     });
 
-                    this.db.each("SELECT * FROM transactions", (err, row) => {
-                        this.push('transactions', row);
+                    this._getTransactions();
+                });
+
+                window.addEventListener('delete-transactions', this._deleteTransactions.bind(this), { passive: true });
+            }
+
+            _deleteTransactions(event) {
+                const transactions = event.detail.transactions;
+                transactions.forEach(transaction => {
+                    this.db.run(`DELETE FROM transactions WHERE id=?`, Number(transaction.id), (err) => {
+                        if (err)
+                            return console.error(err.message);
                     });
+                });
+
+                this._getTransactions();
+            }
+
+            _getTransactions() {
+                this.set('transactions', []);
+                this.db.each("SELECT * FROM transactions", (err, row) => {
+                    this.push('transactions', row);
                 });
             }
 

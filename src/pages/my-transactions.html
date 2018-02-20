@@ -1,4 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 
 <!-- Styles -->
 <link rel="import" href="../styles/shared-styles.html">
@@ -11,9 +13,31 @@
                 display: block;
                 @apply --paper-font-body1;
             }
+
+            transaction-item {
+                @apply --layout-horizontal;
+                @apply --layout-justified;
+                padding: 8px;
+                border-bottom: 1px solid var(--paper-grey-100);
+                background-color: #fff;
+                transition: .2s linear;
+            }
+
+            transaction-item:hover {
+                background-color: #f9f9f9;
+            }
         </style>
+        <button on-click="_deleteSelected">Delete Selected</button>
         <template is="dom-repeat" items="[[transactions]]">
-            <div>[[item.description]] [[item.amount]]</div>
+            <transaction-item checked="false" id="[[item.id]]">
+                <transaction-item-header>
+                    <transaction-item-select>
+                        <paper-icon-button on-click="_toggleChecked" icon="check-box-outline-blank"></paper-icon-button>
+                    </transaction-item-select>
+                    <transaction-item-description>[[item.description]]</transaction-item-description>
+                </transaction-item-header>
+                <transaction-item-amount>[[item.amount]]</transaction-item-amount>
+            </transaction-item>
         </template>
     </template>
 
@@ -26,6 +50,32 @@
                         type: Array
                     }
                 };
+            }
+
+            static get observers() {
+                return ['_transactionsChanged(transactions)'];
+            }
+
+            _transactionsChanged(transactions) {
+                console.log(transactions);
+            }
+
+            _toggleChecked(event) {
+                const transactionItem = event.model.children.filter(o => o.nodeName === "TRANSACTION-ITEM")[0];
+                transactionItem.checked = !transactionItem.checked;
+                const paperIconButton = transactionItem.children[0].children[0].children[0];
+                paperIconButton.icon = paperIconButton.icon === 'check-box' ? 'check-box-outline-blank' : 'check-box';
+            }
+
+            _getSelectedTransactions() {
+                const transactionsNodeList = Polymer.dom(this.shadowRoot).querySelectorAll('transaction-item');
+                const transactions = [].slice.call(transactionsNodeList);
+                return transactions.filter(item => item.checked === true);
+            }
+
+            _deleteSelected(event) {
+                const transactions = this._getSelectedTransactions();
+                this.dispatchEvent(new CustomEvent('delete-transactions', { bubbles: true, composed: true, detail: { transactions } }));
             }
         }
 
