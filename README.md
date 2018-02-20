@@ -1,18 +1,18 @@
-# polymer-electron-starter-kit
+# My Wallet
 
-This is a barebones starter kit for writing an electron app with polymer 2.
+A desktop application for managing account and transactions. Built with Polymer 2 and Electron.
 
 ## Getting Started
 
 ```bash
 # Clone this repository
-git clone https://github.com/kaseyhinton/polymer-electron-starter-kit
+git clone https://github.com/kaseyhinton/wallet
 # Go into the repository
-cd polymer-electron-starter-kit
+cd wallet
 # Install dependencies
 npm install
-# Run the app
-npm run start
+# Start the development server
+npm run dev
 ```
 
 ## Testing

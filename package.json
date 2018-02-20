@@ -1,7 +1,7 @@
 {
-  "name": "polymer-electron-starter-kit",
+  "name": "my-wallet",
   "version": "1.0.0",
-  "description": "A minimal Electron application with polymer 2",
+  "description": "A desktop application for managing account and transactions. Built with Polymer 2 and Electron.",
   "main": "main.js",
   "scripts": {
     "postinstall": "bower install && install-app-deps",
@@ -11,15 +11,13 @@
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
   },
-  "repository": "https://github.com/electron/electron-quick-start",
+  "repository": "https://github.com/kaseyhinton/wallet",
   "keywords": [
     "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
+    "Polymer",
+    "Personal Finance"
   ],
-  "author": "GitHub",
+  "author": "kaseyjameshinton@gmail.com",
   "license": "CC0-1.0",
   "devDependencies": {
     "electron": "~1.7.8",
@@ -28,7 +26,6 @@
     "gulp": "^3.9.1",
     "polymer-cli": "next"
   },
-  "build": {},
   "dependencies": {
     "sqlite3": "^3.1.13"
   }
