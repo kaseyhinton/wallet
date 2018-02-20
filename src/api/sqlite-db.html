@@ -55,10 +55,8 @@
                         this.db.run("INSERT INTO transactions(`id`, `description`, `amount`, `accountId`) VALUES (?, ?,?,?)", transaction.id, transaction.description, transaction.amount, transaction.accountId);
                     });
 
-                    this.db.each("SELECT * FROM accounts", (err, row) => {
-                        this.push('accounts', row);
-                    });
 
+                    this._getAccounts();
                     this._getTransactions();
                 });
 
@@ -75,6 +73,13 @@
                 });
 
                 this._getTransactions();
+            }
+
+            _getAccounts() {
+                this.set('accounts', []);
+                this.db.each("SELECT * FROM accounts", (err, row) => {
+                    this.push('accounts', row);
+                });
             }
 
             _getTransactions() {
