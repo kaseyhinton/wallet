@@ -1,6 +1,8 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
 
 <!-- Styles -->
 <link rel="import" href="../styles/shared-styles.html">
@@ -10,7 +12,7 @@
         <style include="shared-styles"></style>
         <style>
             :host {
-                display: block;
+                @apply --layout-vertical;
                 @apply --paper-font-body1;
             }
 
@@ -26,8 +28,12 @@
             transaction-item:hover {
                 background-color: #f9f9f9;
             }
+
+
+            paper-button {
+                @apply --layout-self-end;
+            }
         </style>
-        <button on-click="_deleteSelected">Delete Selected</button>
         <template is="dom-repeat" items="[[transactions]]">
             <transaction-item checked="false" id="[[item.id]]">
                 <transaction-item-header>
@@ -39,8 +45,9 @@
                 <transaction-item-amount>[[item.amount]]</transaction-item-amount>
             </transaction-item>
         </template>
+        <paper-button hidden$="[[!selectedCount]]" on-click="_deleteSelected">Delete Selected</paper-button>
+        <paper-fab icon="add"></paper-fab>
     </template>
-
     <script>
         class MyTransactions extends Polymer.Element {
             static get is() { return 'my-transactions'; }
@@ -48,6 +55,10 @@
                 return {
                     transactions: {
                         type: Array
+                    },
+                    selectedCount: {
+                        type: Number,
+                        value: 0
                     }
                 };
             }
@@ -57,7 +68,12 @@
             }
 
             _transactionsChanged(transactions) {
-                console.log(transactions);
+                if (transactions.length === 0)
+                    this.selectedCount = 0;
+            }
+
+            _updateSelectedCount() {
+                this.selectedCount = this._getSelectedTransactions().length;
             }
 
             _toggleChecked(event) {
@@ -65,6 +81,7 @@
                 transactionItem.checked = !transactionItem.checked;
                 const paperIconButton = transactionItem.children[0].children[0].children[0];
                 paperIconButton.icon = paperIconButton.icon === 'check-box' ? 'check-box-outline-blank' : 'check-box';
+                this._updateSelectedCount();
             }
 
             _getSelectedTransactions() {

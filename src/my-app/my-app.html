@@ -154,11 +154,11 @@
       }
 
       _routePageChanged(page) {
-        console.log(page);
         this.page = page;
-        if(!this.page)
+        if (!this.page)
           return;
         this.mainTitle = this.page.toUpperCase();
+        this._toggle();
       }
     }
 
