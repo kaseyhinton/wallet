@@ -52,7 +52,7 @@
                     });
 
                     transactions.map(transaction => {
-                        this.db.run("INSERT INTO transactions(`id`, `description`, `amount`, `accountId`) VALUES (?, ?,?,?)", transaction.id, transaction.description, transaction.amount, transaction.accountId);
+                        this.db.run("INSERT INTO transactions(`id`, `description`, `amount`, `accountId`) VALUES (?,?,?,?)", transaction.id, transaction.description, transaction.amount, transaction.accountId);
                     });
 
 
@@ -61,31 +61,46 @@
                 });
 
                 window.addEventListener('delete-transactions', this._deleteTransactions.bind(this), { passive: true });
+                window.addEventListener('add-transaction', this._addTransaction.bind(this), { passive: true });
+            }
+
+            _addTransaction(event) {
+                const transaction = event.detail.transaction;
+                this.db.serialize(() => {
+                    // TODO: add autogen id
+                    this.db.run("INSERT INTO transactions(`id`, `description`, `amount`, `accountId`) VALUES (?,?,?,?)", transaction.id, transaction.description, transaction.amount, transaction.accountId);
+                });
+                this._getTransactions();
             }
 
             _deleteTransactions(event) {
                 const transactions = event.detail.transactions;
-                transactions.forEach(transaction => {
-                    this.db.run(`DELETE FROM transactions WHERE id=?`, Number(transaction.id), (err) => {
-                        if (err)
-                            return console.error(err.message);
+                this.db.serialize(() => {
+                    transactions.forEach(transaction => {
+                        this.db.run(`DELETE FROM transactions WHERE id=?`, Number(transaction.id), (err) => {
+                            if (err)
+                                return console.error(err.message);
+                        });
                     });
                 });
-
                 this._getTransactions();
             }
 
             _getAccounts() {
                 this.set('accounts', []);
-                this.db.each("SELECT * FROM accounts", (err, row) => {
-                    this.push('accounts', row);
+                this.db.serialize(() => {
+                    this.db.each("SELECT * FROM accounts", (err, row) => {
+                        this.push('accounts', row);
+                    });
                 });
             }
 
             _getTransactions() {
                 this.set('transactions', []);
-                this.db.each("SELECT * FROM transactions", (err, row) => {
-                    this.push('transactions', row);
+                this.db.serialize(() => {
+                    this.db.each("SELECT * FROM transactions", (err, row) => {
+                        this.push('transactions', row);
+                    });
                 });
             }
 
