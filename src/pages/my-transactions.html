@@ -3,6 +3,7 @@
 <link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
 <link rel="import" href="../../bower_components/paper-fab/paper-fab.html">
 <link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/titanium-currency/titanium-currency.html">
 
 <!-- Styles -->
 <link rel="import" href="../styles/shared-styles.html">
@@ -14,14 +15,17 @@
             :host {
                 @apply --layout-vertical;
                 @apply --paper-font-body1;
+                @apply --shadow-elevation-2dp;
+                background-color: #fff;
+                margin: 16px;
             }
 
             transaction-item {
                 @apply --layout-horizontal;
                 @apply --layout-justified;
-                padding: 8px;
+                @apply --layout-center;
+                padding: 4px;
                 border-bottom: 1px solid var(--paper-grey-100);
-                background-color: #fff;
                 transition: .2s linear;
             }
 
@@ -29,9 +33,13 @@
                 background-color: #f9f9f9;
             }
 
-
             paper-button {
                 @apply --layout-self-end;
+                margin: 4px;
+            }
+
+            titanium-currency {
+                margin-right: 8px;
             }
         </style>
         <template is="dom-repeat" items="[[transactions]]">
@@ -42,7 +50,7 @@
                     </transaction-item-select>
                     <transaction-item-description>[[item.description]]</transaction-item-description>
                 </transaction-item-header>
-                <transaction-item-amount>[[item.amount]]</transaction-item-amount>
+                <titanium-currency value="[[item.amount]]" decimal-places="2" thousands-separators accounting-format></titanium-currency>
             </transaction-item>
         </template>
         <paper-button hidden$="[[!selectedCount]]" on-click="_deleteSelected">Delete Selected</paper-button>
