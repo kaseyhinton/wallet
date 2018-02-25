@@ -16,6 +16,9 @@
 <link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../api/sqlite-db.html">
 
+<!-- Ensure Web Animations polyfill is loaded since neon-animation 2.0 doesn't import it -->
+<link rel="import" href="../../bower_components/web-animations-js/web-animations-next.min.html">
+
 <!-- Pages -->
 <link rel="import" href="../pages/my-accounts.html">
 <link rel="import" href="../pages/my-transactions.html">
@@ -97,7 +100,7 @@
                   <span>Accounts</span>
                 </paper-icon-item>
               </a>
-              <a href="#/transactions" name="TRANSACTIONS">
+              <a href="#/transactions/view" name="TRANSACTIONS">
                 <paper-icon-item>
                   <iron-icon icon="work" slot="item-icon"></iron-icon>
                   <span>Transactions</span>
@@ -108,7 +111,7 @@
         </app-drawer>
         <iron-pages selected="[[page]]" attr-for-selected="name">
           <my-accounts accounts="[[accounts]]" is-loading="{{isLoading}}" name="accounts"></my-accounts>
-          <my-transactions transactions="[[transactions]]" is-loading="{{isLoading}}" name="transactions"></my-transactions>
+          <my-transactions accounts="[[accounts]]" transactions="[[transactions]]" is-loading="{{isLoading}}" name="transactions"></my-transactions>
         </iron-pages>
       </app-drawer-layout>
 

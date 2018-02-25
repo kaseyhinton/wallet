@@ -1,0 +1,121 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../../bower_components/titanium-currency/titanium-currency.html">
+
+<!-- Styles -->
+<link rel="import" href="../styles/shared-styles.html">
+
+<dom-module id="view-transactions">
+    <template>
+        <style include="shared-styles"></style>
+        <style>
+            :host {
+                @apply --layout-vertical;
+                @apply --paper-font-body1;
+                @apply --shadow-elevation-2dp;
+                background-color: #fff;
+                margin: 16px;
+            }
+
+            transaction-item {
+                @apply --layout-horizontal;
+                @apply --layout-justified;
+                @apply --layout-center;
+                padding: 4px;
+                border-bottom: 1px solid var(--paper-grey-100);
+                transition: .2s linear;
+            }
+
+            transaction-item:hover {
+                background-color: #f9f9f9;
+            }
+
+            transaction-actions {
+                @apply --layout-self-end;
+                @apply --layout-horizontal;
+            }
+
+            paper-icon-button {
+                margin: 4px;
+            }
+
+            paper-icon-button[delete] {
+                color: var(--paper-red-300);
+            }
+
+            titanium-currency {
+                margin-right: 8px;
+            }
+        </style>
+        <template is="dom-repeat" items="[[transactions]]">
+            <transaction-item checked="false" id="[[item.id]]">
+                <transaction-item-header>
+                    <transaction-item-select>
+                        <paper-icon-button on-click="_toggleChecked" icon="check-box-outline-blank"></paper-icon-button>
+                    </transaction-item-select>
+                    <transaction-item-description>[[item.description]]</transaction-item-description>
+                </transaction-item-header>
+                <titanium-currency value="[[item.amount]]" decimal-places="2" thousands-separators accounting-format></titanium-currency>
+            </transaction-item>
+        </template>
+        <transaction-actions>
+            <paper-icon-button hidden$="[[!selectedCount]]" icon="create"></paper-icon-button>
+            <paper-icon-button delete hidden$="[[!selectedCount]]" on-click="_deleteSelected" icon="delete"></paper-icon-button>
+        </transaction-actions>
+        <a href="#/transactions/add">
+            <paper-fab icon="add"></paper-fab>
+        </a>
+
+        
+    </template>
+    <script>
+        class ViewTransactions extends Polymer.Element {
+            static get is() { return 'view-transactions'; }
+            static get properties() {
+                return {
+                    transactions: {
+                        type: Array
+                    }
+                };
+            }
+            
+            static get observers() {
+                return ['_transactionsChanged(transactions)'];
+            }
+
+            _transactionsChanged(transactions) {
+                if (transactions.length === 0)
+                    this.selectedCount = 0;
+            }
+
+            _updateSelectedCount() {
+                this.selectedCount = this._getSelectedTransactions().length;
+            }
+
+            _toggleChecked(event) {
+                const transactionItem = event.model.children.filter(o => o.nodeName === "TRANSACTION-ITEM")[0];
+                transactionItem.checked = !transactionItem.checked;
+                const paperIconButton = transactionItem.children[0].children[0].children[0];
+                paperIconButton.icon = paperIconButton.icon === 'check-box' ? 'check-box-outline-blank' : 'check-box';
+                this._updateSelectedCount();
+            }
+
+            _getSelectedTransactions() {
+                const transactionsNodeList = Polymer.dom(this.shadowRoot).querySelectorAll('transaction-item');
+                const transactions = [].slice.call(transactionsNodeList);
+                return transactions.filter(item => item.checked === true);
+            }
+
+            _deleteSelected(event) {
+                const transactions = this._getSelectedTransactions();
+                this.dispatchEvent(new CustomEvent('delete-transactions', { bubbles: true, composed: true, detail: { transactions } }));
+            }
+        }
+        window.customElements.define(ViewTransactions.is, ViewTransactions);
+    </script>
+</dom-module>
