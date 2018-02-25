@@ -5,13 +5,13 @@ A desktop application for managing account and transactions. Built with Polymer 
 ## Getting Started
 
 ```bash
-# Clone this repository
+
 git clone https://github.com/kaseyhinton/wallet
-# Go into the repository
+
 cd wallet
-# Install dependencies
+
 npm install
-# Start the development server
+
 npm run dev
 ```
 
@@ -29,4 +29,4 @@ npm run dist
 
 ## License
 
-[CC0 1.0 (Public Domain)](LICENSE.md)
+MIT
