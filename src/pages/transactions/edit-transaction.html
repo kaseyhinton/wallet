@@ -1,0 +1,32 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+
+<!-- Styles -->
+<link rel="import" href="../styles/shared-styles.html">
+
+<dom-module id="edit-transaction">
+    <template>
+        <style include="shared-styles"></style>
+        <style>
+            :host {
+                @apply --layout-vertical;
+                @apply --paper-font-body1;
+            }
+        </style>
+        <div>[[transaction.description]]</div>
+        <div>[[transaction.amount]]</div>
+    </template>
+    <script>
+        class EditTransaction extends Polymer.Element {
+            static get is() { return 'edit-transaction'; }
+            static get properties() {
+                return {
+                    transaction: {
+                        type: Object
+                    }
+                };
+            }
+
+        }
+        window.customElements.define(EditTransaction.is, EditTransaction);
+    </script>
+</dom-module>

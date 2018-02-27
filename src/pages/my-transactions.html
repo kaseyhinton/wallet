@@ -9,6 +9,7 @@
 
 <link rel="import" href="./transactions/view-transactions.html">
 <link rel="import" href="./transactions/add-transaction.html">
+<link rel="import" href="./transactions/edit-transaction.html">
 
 <!-- Styles -->
 <link rel="import" href="../styles/shared-styles.html">
@@ -28,7 +29,7 @@
         <iron-pages selected="[[routeData.page]]" attr-for-selected="name">
             <view-transactions transactions="[[transactions]]" name="view"></view-transactions>
             <add-transaction accounts="[[accounts]]" name="add"></add-transaction>
-            <edit-transaction name="edit"></edit-transaction>
+            <edit-transaction transaction="[[transaction]]" name="edit"></edit-transaction>
         </iron-pages>
     </template>
     <script>
@@ -42,11 +43,18 @@
                     accounts: {
                         type: Array
                     },
-                    selectedCount: {
-                        type: Number,
-                        value: 0
+                    transaction: {
+                        type: Object
                     }
                 };
+            }
+
+            ready(){
+                super.ready();
+                window.addEventListener('edit-transaction', (event)=>{
+                    this.set('transaction', event.detail.transaction);
+                    this.set('route.path', '/transactions/edit');
+                })
             }
 
             static get observers() {

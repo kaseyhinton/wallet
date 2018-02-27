@@ -53,7 +53,7 @@
             }
         </style>
         <template is="dom-repeat" items="[[transactions]]">
-            <transaction-item checked="false" id="[[item.id]]">
+            <transaction-item checked="false" id="[[item.id]]" item="[[item]]">
                 <transaction-item-header>
                     <transaction-item-select>
                         <paper-icon-button on-click="_toggleChecked" icon="check-box-outline-blank"></paper-icon-button>
@@ -64,14 +64,12 @@
             </transaction-item>
         </template>
         <transaction-actions>
-            <paper-icon-button hidden$="[[!selectedCount]]" icon="create"></paper-icon-button>
+            <paper-icon-button hidden$="[[_hideEdit(selectedCount)]]" on-click="_editSelected" icon="create"></paper-icon-button>
             <paper-icon-button delete hidden$="[[!selectedCount]]" on-click="_deleteSelected" icon="delete"></paper-icon-button>
         </transaction-actions>
         <a href="#/transactions/add">
             <paper-fab icon="add"></paper-fab>
         </a>
-
-        
     </template>
     <script>
         class ViewTransactions extends Polymer.Element {
@@ -114,6 +112,15 @@
             _deleteSelected(event) {
                 const transactions = this._getSelectedTransactions();
                 this.dispatchEvent(new CustomEvent('delete-transactions', { bubbles: true, composed: true, detail: { transactions } }));
+            }
+
+            _editSelected(event){
+                const transaction = this._getSelectedTransactions()[0].item;
+                this.dispatchEvent(new CustomEvent('edit-transaction', { bubbles: true, composed: true, detail: { transaction } }));
+            }
+
+            _hideEdit(selectedCount){
+                return selectedCount !== 1;
             }
         }
         window.customElements.define(ViewTransactions.is, ViewTransactions);
