@@ -31,8 +31,8 @@
                 const sqlite3 = require('sqlite3').verbose();
                 this.db = new sqlite3.Database(':memory:');
                 this.db.serialize(() => {
-                    this.db.run("CREATE TABLE accounts (accountId integer PRIMARY KEY, name text NOT NULL, balance integer)");
-                    this.db.run("CREATE TABLE transactions (id integer PRIMARY KEY, description text NOT NULL, amount integer, accountId integer NOT NULL, FOREIGN KEY (accountId) REFERENCES accounts(accountId))");
+                    this.db.run("CREATE TABLE accounts (accountId integer PRIMARY KEY AUTOINCREMENT, name text NOT NULL, balance integer)");
+                    this.db.run("CREATE TABLE transactions (id integer PRIMARY KEY AUTOINCREMENT, description text NOT NULL, amount integer, accountId integer NOT NULL, FOREIGN KEY (accountId) REFERENCES accounts(accountId))");
 
                     // Mock Data
                     const accounts = [
@@ -62,13 +62,24 @@
 
                 window.addEventListener('delete-transactions', this._deleteTransactions.bind(this), { passive: true });
                 window.addEventListener('add-transaction', this._addTransaction.bind(this), { passive: true });
+                window.addEventListener('edit-transaction', this._editTransaction.bind(this), { passive: true });
             }
 
             _addTransaction(event) {
                 const transaction = event.detail.transaction;
                 this.db.serialize(() => {
                     // TODO: add autogen id
-                    this.db.run("INSERT INTO transactions(`id`, `description`, `amount`, `accountId`) VALUES (?,?,?,?)", transaction.id, transaction.description, transaction.amount, transaction.accountId);
+                    this.db.run("INSERT INTO transactions(`description`, `amount`, `accountId`) VALUES (?,?,?)",transaction.description, transaction.amount, transaction.accountId);
+                });
+                this._getTransactions();
+            }
+
+            _editTransaction(event) {
+                let transaction = event.detail.transaction;
+                transaction.amount = Number(transaction.amount);
+                this.db.serialize(() => {
+                    // TODO: add autogen id
+                    this.db.run(`UPDATE transactions SET description = '${transaction.description}', amount = ${transaction.amount}, accountId = ${transaction.accountId} WHERE id = ${transaction.id}`);
                 });
                 this._getTransactions();
             }
