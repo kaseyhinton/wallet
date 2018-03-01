@@ -14,6 +14,8 @@
 <link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../../bower_components/paper-item/paper-icon-item.html">
 <link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../../bower_components/titanium-dependency-injection/titanium-dependency-resolver-mixin.html">
+<link rel="import" href="../../bower_components/titanium-dependency-injection/titanium-provider-mixin.html">
 <link rel="import" href="../api/sqlite-db.html">
 
 <!-- Ensure Web Animations polyfill is loaded since neon-animation 2.0 doesn't import it -->
@@ -79,7 +81,7 @@
     <app-location use-hash-as-path route="{{route}}"></app-location>
 
     <app-route route="{{route}}" pattern="/:page" data="{{routeData}}"></app-route>
-
+    <api-service id="apiService"></api-service>
     <sqlite-db db="{{db}}" transactions="{{transactions}}" accounts="{{accounts}}"></sqlite-db>
 
     <app-header-layout>
@@ -91,7 +93,6 @@
       </app-header>
 
       <app-drawer-layout id="drawerLayout">
-
         <app-drawer slot="drawer">
           <div class="drawer-content">
             <iron-selector attr-for-selected="name" selected="[[mainTitle]]">
@@ -122,12 +123,11 @@
           <my-settings name="settings"></my-settings>
         </iron-pages>
       </app-drawer-layout>
-
     </app-header-layout>
   </template>
 
   <script>
-    class MyApp extends Polymer.Element {
+    class MyApp extends TitaniumDependencyResolverMixin(TitaniumProviderMixin(Polymer.Element)){
       static get is() { return 'my-app'; }
       static get properties() {
         return {
@@ -153,6 +153,7 @@
 
       ready() {
         super.ready();
+        this.provideInstance('ApiService', this.$.apiService);
         window.location.hash = window.location.hash || "#/accounts";
       }
 

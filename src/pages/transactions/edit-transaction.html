@@ -4,6 +4,9 @@
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../../bower_components/paper-button/paper-button.html">
 <link rel="import" href="../../../bower_components/iron-form/iron-form.html">
+<link rel="import" href="../../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../../bower_components/app-route/app-location.html">
+<link rel="import" href="../../../bower_components/titanium-dependency-injection/titanium-requester-mixin.html">
 
 <!-- Styles -->
 <link rel="import" href="../styles/shared-styles.html">
@@ -39,6 +42,9 @@
                 margin-top: 16px;
             }
         </style>
+        <app-location use-hash-as-path route="{{route}}"></app-location>
+        <app-route route="{{route}}" pattern="/transactions/edit/:id" data="{{routeData}}"></app-route>
+
         <iron-form id="form">
             <form>
                 <paper-input always-float-label type="text" label="Description" value="{{transaction.description}}"></paper-input>
@@ -48,15 +54,35 @@
         </iron-form>
     </template>
     <script>
-        class EditTransaction extends Polymer.Element {
+        class EditTransaction extends TitaniumRequesterMixin(Polymer.Element) {
             static get is() { return 'edit-transaction'; }
             static get properties() {
                 return {
                     transaction: {
                         type: Object
+                    },
+                    routeData: {
+                        type: Object
                     }
                 };
             }
+
+            static get observers() {
+                return [
+                    '_transactionIdChanged(routeData.id)'
+                ]
+            }
+
+            async connectedCallback() {
+                super.connectedCallback();
+                const apiService = await this.requestInstance("ApiService");
+                console.log(apiService);
+            }
+
+            _transactionIdChanged(id) {
+                console.log(id);
+            }
+
             _submit() {
                 this.dispatchEvent(new CustomEvent('edit-transaction', { bubbles: true, composed: true, detail: { transaction: this.transaction } }));
             }

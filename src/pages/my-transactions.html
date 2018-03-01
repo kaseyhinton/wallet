@@ -29,7 +29,7 @@
         <iron-pages selected="[[routeData.page]]" attr-for-selected="name">
             <view-transactions transactions="[[transactions]]" name="view"></view-transactions>
             <add-transaction accounts="[[accounts]]" name="add"></add-transaction>
-            <edit-transaction transaction="[[transaction]]" name="edit"></edit-transaction>
+            <edit-transaction name="edit"></edit-transaction>
         </iron-pages>
     </template>
     <script>
@@ -42,9 +42,6 @@
                     },
                     accounts: {
                         type: Array
-                    },
-                    transaction: {
-                        type: Object
                     }
                 };
             }
@@ -52,8 +49,7 @@
             ready(){
                 super.ready();
                 window.addEventListener('navigate-edit-transaction', (event)=>{
-                    this.set('transaction', event.detail.transaction);
-                    this.set('route.path', '/transactions/edit');
+                    this.set('route.path', `/transactions/edit/${event.detail.transaction.id}`);
                 })
             }
 

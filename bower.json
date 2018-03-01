@@ -21,7 +21,8 @@
     "paper-listbox": "PolymerElements/paper-listbox#^2.0.0",
     "neon-animation": "PolymerElements/neon-animation#^2.2.0",
     "iron-form": "PolymerElements/iron-form#^2.2.1",
-    "paper-toggle-button": "PolymerElements/paper-toggle-button#^2.0.0"
+    "paper-toggle-button": "PolymerElements/paper-toggle-button#^2.0.0",
+    "titanium-dependency-injection": "LssPolymerElements/titanium-dependency-injection#^3.0.6"
   },
   "devDependencies": {
     "web-component-tester": "Polymer/web-component-tester#^6.0.0",
