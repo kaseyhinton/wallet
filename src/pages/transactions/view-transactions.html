@@ -116,7 +116,7 @@
 
             _editSelected(event){
                 const transaction = this._getSelectedTransactions()[0].item;
-                this.dispatchEvent(new CustomEvent('edit-transaction', { bubbles: true, composed: true, detail: { transaction } }));
+                this.dispatchEvent(new CustomEvent('navigate-edit-transaction', { bubbles: true, composed: true, detail: { transaction } }));
             }
 
             _hideEdit(selectedCount){

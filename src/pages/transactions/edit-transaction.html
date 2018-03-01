@@ -12,7 +12,7 @@
     <template>
         <style include="shared-styles"></style>
         <style>
-           :host {
+            :host {
                 @apply --layout-vertical;
                 @apply --paper-font-body1;
                 @apply --shadow-elevation-2dp;
@@ -32,7 +32,7 @@
                 width: 100%;
             }
 
-            paper-button[primary]{
+            paper-button[primary] {
                 @apply --layout-self-end;
                 background-color: var(--app-primary-color);
                 color: #fff;
@@ -40,12 +40,12 @@
             }
         </style>
         <iron-form id="form">
-                <form>
-                        <paper-input always-float-label type="text" label="Description" value="{{transaction.description}}"></paper-input>
-                        <paper-input always-float-label type="string" label="Amount" value="{{transaction.amount}}"></paper-input>
-                    <paper-button raised primary>SAVE</paper-button>
-                </form>
-            </iron-form>
+            <form>
+                <paper-input always-float-label type="text" label="Description" value="{{transaction.description}}"></paper-input>
+                <paper-input always-float-label type="number" label="Amount" value="{{transaction.amount}}"></paper-input>
+                <paper-button raised primary on-click="_submit">SAVE</paper-button>
+            </form>
+        </iron-form>
     </template>
     <script>
         class EditTransaction extends Polymer.Element {
@@ -56,6 +56,9 @@
                         type: Object
                     }
                 };
+            }
+            _submit() {
+                this.dispatchEvent(new CustomEvent('edit-transaction', { bubbles: true, composed: true, detail: { transaction: this.transaction } }));
             }
         }
         window.customElements.define(EditTransaction.is, EditTransaction);

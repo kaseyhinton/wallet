@@ -51,7 +51,7 @@
 
             ready(){
                 super.ready();
-                window.addEventListener('edit-transaction', (event)=>{
+                window.addEventListener('navigate-edit-transaction', (event)=>{
                     this.set('transaction', event.detail.transaction);
                     this.set('route.path', '/transactions/edit');
                 })

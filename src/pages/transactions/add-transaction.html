@@ -42,14 +42,15 @@
         <iron-form id="form">
             <form>
                 <paper-dropdown-menu  always-float-label label="Account">
-                    <paper-listbox slot="dropdown-content">
+                    <paper-listbox slot="dropdown-content" selected="{{transaction.accountId}}">
                         <template is="dom-repeat" items="[[accounts]]">
                             <paper-item>[[item.name]]</paper-item>
                         </template>
                     </paper-listbox>
                 </paper-dropdown-menu>
-                <paper-input label="Amount" type="number" always-float-label></paper-input>
-                <paper-button raised primary>ADD</paper-button>
+                <paper-input label="Description" type="text" always-float-label value="{{transaction.description}}"></paper-input>
+                <paper-input label="Amount" type="number" always-float-label value="{{transaction.amount}}"></paper-input>
+                <paper-button raised primary on-click="_submit">ADD</paper-button>
             </form>
         </iron-form>
     </template>
@@ -59,14 +60,19 @@
             static get properties() {
                 return {
                     transaction: {
-                        type: Object
+                        type: Object,
+                        value: {}
                     },
                     accounts: {
                         type: Array
                     }
                 };
             }
-            
+
+            _submit(){
+                this.dispatchEvent(new CustomEvent('add-transaction', { bubbles: true, composed: true, detail: { transaction: this.transaction } }));
+                this.transaction = {};
+            }
         }
         window.customElements.define(AddTransaction.is, AddTransaction);
     </script>
