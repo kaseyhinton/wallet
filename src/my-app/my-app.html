@@ -22,6 +22,7 @@
 <!-- Pages -->
 <link rel="import" href="../pages/my-accounts.html">
 <link rel="import" href="../pages/my-transactions.html">
+<link rel="import" href="../pages/my-settings.html">
 
 <!-- Styles -->
 <link rel="import" href="../styles/shared-styles.html">
@@ -106,12 +107,19 @@
                   <span>Transactions</span>
                 </paper-icon-item>
               </a>
+              <a href="#/settings" name="SETTINGS">
+                <paper-icon-item>
+                  <iron-icon icon="settings" slot="item-icon"></iron-icon>
+                  <span>Settings</span>
+                </paper-icon-item>
+              </a>
             </iron-selector>
           </div>
         </app-drawer>
         <iron-pages selected="[[page]]" attr-for-selected="name">
           <my-accounts accounts="[[accounts]]" is-loading="{{isLoading}}" name="accounts"></my-accounts>
           <my-transactions accounts="[[accounts]]" transactions="[[transactions]]" is-loading="{{isLoading}}" name="transactions"></my-transactions>
+          <my-settings name="settings"></my-settings>
         </iron-pages>
       </app-drawer-layout>
 

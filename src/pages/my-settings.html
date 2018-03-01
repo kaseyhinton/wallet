@@ -1,0 +1,101 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<!-- Components -->
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+
+<!-- Styles -->
+<link rel="import" href="../styles/shared-styles.html">
+
+<dom-module id="my-settings">
+    <template>
+        <style include="shared-styles"></style>
+        <style>
+            :host {
+                @apply --layout-vertical;
+                @apply --paper-font-body1;
+                @apply --shadow-elevation-2dp;
+                background-color: #fff;
+                margin: 16px;
+                padding: 16px;
+            }
+
+            paper-toggle-button {
+                margin: 8px 0;
+            }
+
+            paper-button {
+                @apply --layout-self-start;
+                background-color: var(--paper-grey-200);
+                margin: 8px 0;
+            }
+
+            paper-button[primary] {
+                @apply --layout-self-end;
+                background-color: var(--app-primary-color);
+                color: #fff;
+                margin-bottom: 0;
+            }
+
+            label {
+                @apply --paper-font-caption;
+                color: var(--paper-grey-500);
+                margin-top: 24px;
+            }
+
+            label:first-of-type {
+                margin-top: 0;
+            }
+
+        </style>
+        <label>User Information</label>
+        <paper-input label="Name" type="text" always-float-label></paper-input>
+        <paper-input label="Email Address" type="text" always-float-label></paper-input>
+
+        <label>Backups</label>
+        <paper-toggle-button checked="{{automatedBackups}}">Automated Backups</paper-toggle-button>
+        <paper-input hidden$="[[!automatedBackups]]" label="Directory For Backups" type="text" always-float-label></paper-input>
+        <paper-dropdown-menu hidden$="[[!automatedBackups]]" always-float-label label="Backup Frequency">
+            <paper-listbox slot="dropdown-content" selected="{{backupFrequency}}">
+                <paper-item>Daily</paper-item>
+                <paper-item>Monthly</paper-item>
+            </paper-listbox>
+        </paper-dropdown-menu>
+
+        <label>Preferences</label>
+        <paper-toggle-button checked>Activate On Startup</paper-toggle-button>
+        <paper-toggle-button checked>Desktop Notifications</paper-toggle-button>
+
+        <label>Security</label>
+        <paper-toggle-button>Password Protection</paper-toggle-button>
+
+        <label>Actions</label>
+        <paper-button>Manual Backup</paper-button>
+        <paper-button>Email Export</paper-button>
+        <paper-button>Check For Updates</paper-button>
+        <paper-button primary>Save Settings</paper-button>
+    </template>
+    <script>
+        class MySettings extends Polymer.Element {
+            static get is() { return 'my-settings'; }
+            static get properties() {
+                return {
+                    automatedBackups: {
+                        type: Boolean
+                    },
+                    backupFrequency: {
+                        type: String
+                    }
+                };
+            }
+        }
+
+        window.customElements.define(MySettings.is, MySettings);
+    </script>
+</dom-module>
